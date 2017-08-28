@@ -1,0 +1,7 @@
+@font-face{
+    font-family: 'eee';
+    src: url(./consolas-webfont.woff) format('woff'),url(./consolas-webfont.ttf) format('ttf');
+    /* font-weight: 600; */
+    /* font-style:normal; */
+}
+.hello{color:#ff7500; font-family: 'eee'; background:url('./google.jpg')}
