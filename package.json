@@ -1,14 +1,15 @@
 {
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "start":"webpack-dev-server --open"
+    "start": "webpack-dev-server --open"
   },
   "devDependencies": {
+    "babel-loader": "^7.1.2",
+    "babel-preset-react": "^6.24.1",
     "clean-webpack-plugin": "^0.1.16",
-    "css-loader": "^0.28.4",
+    "css-loader": "^0.28.5",
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.30.1",
-    "lodash": "^4.17.4",
     "style-loader": "^0.18.2",
     "webpack-dev-server": "^2.6.1"
   }

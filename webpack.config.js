@@ -1,46 +1,58 @@
 const path = require('path');
-const HtmlWebpackPlugin=require('html-webpack-plugin');
-const cleanWebpackPlugin=require('clean-webpack-plugin');
-const webpack=require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const cleanWebpackPlugin=require('clean-webpack-plugin');
+const webpack = require('webpack');
 module.exports = {
 	entry: {
 		// 'webpack-dev-server/client?localhost:8080',
 		// 'webpack/hot/dev-server',
-		index:'./src/index.js',
-		print:'./src/print.js'
+		index: './src/index.js',
+		// print:'./src/print.js'
 	},
-	
-	devtool:'inline-source-map',
-	devServer:{
-		contentBase:'./dist',
+
+	devtool: 'inline-source-map',
+	devServer: {
+		contentBase: './dist',
 		// hot:true
 	},
-	plugins:[
-		new cleanWebpackPlugin(['dist']),
-		new HtmlWebpackPlugin({
-			title:'123',
-			// template:'./dist/index.html'
-		}),
+	plugins: [
+		// new cleanWebpackPlugin(['dist']),
+		// new HtmlWebpackPlugin({
+		// 	title:'123',
+		// 	// template:'./dist/index.html'
+		// }),
 		// new webpack.HotModuleReplacementPlugin()
 	],
 	output: {
 		path: path.resolve(__dirname, 'dist'),
 		filename: "[name].bundle.js"
 	},
-	module: { 
+	module: {
 		loaders: [
 			{
-				test: path.join(__dirname, 'src'),
+				test: /\.js|jsx?$/,
+				exclude:/node_modules/,
 				loader: 'babel-loader',
 				query: {
-					presets: ['es2015']
+					presets: ['react','es2015']
 				}
 			},
+			// {
+			// 	test: path.join(__dirname, 'src'),
+			// 	loader: 'babel-loader',
+			// 	query: {
+			// 		presets: ['es2015']
+			// 	}
+			// },
 			{
-				test:'/\.html$/',
-				loader:'raw-loader'
+				test: '/\.html/',
+				loader: 'raw-loader'
+			},
+			{
+				test: /\.css$/,
+				loader: 'style-loader!css-loader'
 			}
 		],
-		
+
 	}
 }
