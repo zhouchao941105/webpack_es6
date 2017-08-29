@@ -45,7 +45,7 @@ module.exports = {
 			// 	}
 			// },
 			{
-				test: '/\.html/',
+				test: /\.html/,
 				loader: 'raw-loader'
 			},
 			{
