@@ -1,39 +1,24 @@
-// import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Square from './square'
 import './index.css';
-//单元格
-class Square extends React.Component {
-    // constructor() {
-    //     super();
-    //     this.state = {
-    //         value: null
-    //     }
-    // }
-    render() {
-        return (
-            <button className="square" onClick={() => this.props.cb()}>
-                {this.props.value}
-            </button>
-        );
-    }
-}
+
 //区域
 class Board extends React.Component {
     constructor() {
         super();
         this.state = {
             squares: Array(9).fill(null),
-            Xnext:true
+            Xnext: true
         }
     }
-    handleClick(i){
-        const squares=this.state.squares.slice();
-        squares[i]=this.state.Xnext ? 'x' : 'o';
-        this.setState({squares:squares,Xnext:!this.state.Xnext})
+    handleClick(i) {
+        const squares = this.state.squares.slice();
+        squares[i] = this.state.Xnext ? 'x' : 'o';
+        this.setState({ squares: squares, Xnext: !this.state.Xnext })
     }
     renderSquare(i) {
-        return <Square value={this.state.squares[i]} cb={()=>this.handleClick(i)}/>;
+        return <Square value={this.state.squares[i]} cb={() => this.handleClick(i)} />;
     }
     render() {
         const status = `Next player: ${this.state.Xnext ? 'x' : 'o'}`;
@@ -56,6 +41,7 @@ class Board extends React.Component {
                     {this.renderSquare(7)}
                     {this.renderSquare(8)}
                 </div>
+                <p>{this.state.squares[4]}</p>
             </div>
         );
     }
@@ -72,6 +58,7 @@ class Game extends React.Component {
                     <div>{/* status */}</div>
                     <ol>{/* TODO */}</ol>
                 </div>
+                <p>12345</p>
             </div>
         );
     }
@@ -83,5 +70,5 @@ ReactDOM.render(
     <Game />,
     document.getElementById('root')
 );
-
-console.log('success@');
+if (module.hot)
+    module.hot.accept()
