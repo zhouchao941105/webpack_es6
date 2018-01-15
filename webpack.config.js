@@ -8,8 +8,12 @@ module.exports = {
 		index:'./src/index.js'
 		// index: ['react-hot-loader/patch','webpack-dev-server/client?http://localhost:8080','webpack/hot/only-dev-server','./src/index.js']
 	},
-
-	devtool: 'eval',
+	output: {
+		path: path.resolve(__dirname, 'dist'),
+		filename: "[name].bundle.js",
+		// publicPath:'/'
+	},
+	devtool: false,
 	devServer: {
 		contentBase: path.join(__dirname,'dist'),
 		hot: true,
@@ -27,11 +31,7 @@ module.exports = {
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NamedModulesPlugin()
 	],
-	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: "[name].bundle.js",
-		// publicPath:'/'
-	},
+	
 	module: {
 		loaders: [
 			{
