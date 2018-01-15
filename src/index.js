@@ -2,80 +2,104 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Square from './square'
 import './index.css';
-//四子棋
+//五子棋
 //区域
+function H(initarr) {
+    let arr = initarr.map(itme => item.x == 0)
+    let sortedarr = arr.map(item => item.y).sort((a, b) => a - b)
+    let sum = sortedarr.length % 2 == 0 ? (sortedarr[sortedarr.length / 2] + sortedarr[sortedarr.length / 2 - 1]) * 5 / 2 : sortedarr[(sortedarr.length - 1) / 2] * 5
+    if (sortedarr.reduce((a, b) => a + b) === sum) {
+        return initarr[0].Xnext ? 'X' : 'O'
+    }
+}
 class Board extends React.Component {
     constructor() {
         super();
+        const arr = Array(5)
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = Array(5)
+        }
+        // 用Array(5).fill(Array(5))构造出来的二维数组有问题，每一项会保留同一引用
         this.state = {
-            squares: Array(25).fill(null),
-            Xnext: true
+            squares: arr,
+            Xnext: true,
+            filledArea: []
         }
     }
-    handleClick(i) {
-        if (this.calculWinner(this.state.squares) || this.state.squares[i]) {
+    handleClick(x, y) {
+        if (this.state.squares[x][y]) {
             return;
         }
         const squares = this.state.squares.slice();
-        squares[i] = this.state.Xnext ? 'x' : 'o';
+        squares[x][y] = this.state.Xnext ? 'x' : 'o';
         this.setState({
             squares: squares,
-            Xnext: !this.state.Xnext
+            Xnext: !this.state.Xnext,
+            filledArea: this.state.filledArea.concat([{ x, y, Xnext: this.state.Xnext }])
         })
     }
-    renderSquare(i) {
-        return <Square value={this.state.squares[i]} cb={() => this.handleClick(i)} />;
+    renderSquare(x, y) {
+        return <Square value={this.state.squares[x][y]} cb={() => this.handleClick(x, y)} />;
     }
-    calculWinner(squ) {
-        const lines = []
-        for (var i = 0, l = lines.length; i < l; i++) {
-            let [x, y, z] = lines[i];
-            if (squ[x] && squ[x] == squ[y] && squ[x] == squ[z]) {
-                return squ[x]
+    calculWinner(area) {
+        if (area.length < 9) {
+            return false;
+        }
+        let xarr = area.filter(item => item.Xnext)
+        let oarr = area.filter(item => !item.Xnext)
+        //横向
+        if (xarr.map(item => item.x == 0).length >= 5) {
+            let sortedarr = xarr.map(item => item.y).sort((a, b) => a - b)
+            let sum = sortedarr.length % 2 == 0 ? (sortedarr[sortedarr.length / 2] + sortedarr[sortedarr.length / 2 - 1]) * 5 / 2 : sortedarr[(sortedarr.length - 1) / 2] * 5
+            if (sortedarr.reduce((a, b) => a + b) === sum) {
+                return 'X'
             }
         }
-        return false;
+        console.log(xarr, oarr);
+        //纵向
+        //斜向 从上往下看为 左至右
+        //反斜向 从上往下看为 右至左
     }
     render() {
-        const winner = this.calculWinner(this.state.squares)
+        const winner = this.calculWinner(this.state.filledArea)
         const status = winner ? `winner is ${winner}` : `Next player: ${this.state.Xnext ? 'x' : 'o'}`;
         return (
             <div>
                 <div className="status">{status}</div>
                 <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
+                    {this.renderSquare(0, 0)}
+                    {this.renderSquare(0, 1)}
+                    {this.renderSquare(0, 2)}
+                    {this.renderSquare(0, 3)}
+                    {this.renderSquare(0, 4)}
                 </div>
                 <div className="board-row">
-                    {this.renderSquare(5)}
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                    {this.renderSquare(9)}
+                    {this.renderSquare(1, 0)}
+                    {this.renderSquare(1, 1)}
+                    {this.renderSquare(1, 2)}
+                    {this.renderSquare(1, 3)}
+                    {this.renderSquare(1, 4)}
                 </div>
                 <div className="board-row">
-                    {this.renderSquare(10)}
-                    {this.renderSquare(11)}
-                    {this.renderSquare(12)}
-                    {this.renderSquare(13)}
-                    {this.renderSquare(14)}
+                    {this.renderSquare(2, 0)}
+                    {this.renderSquare(2, 1)}
+                    {this.renderSquare(2, 2)}
+                    {this.renderSquare(2, 3)}
+                    {this.renderSquare(2, 4)}
                 </div>
                 <div className="board-row">
-                    {this.renderSquare(15)}
-                    {this.renderSquare(16)}
-                    {this.renderSquare(17)}
-                    {this.renderSquare(18)}
-                    {this.renderSquare(19)}
+                    {this.renderSquare(3, 0)}
+                    {this.renderSquare(3, 1)}
+                    {this.renderSquare(3, 2)}
+                    {this.renderSquare(3, 3)}
+                    {this.renderSquare(3, 4)}
                 </div>
                 <div className="board-row">
-                    {this.renderSquare(20)}
-                    {this.renderSquare(21)}
-                    {this.renderSquare(22)}
-                    {this.renderSquare(23)}
-                    {this.renderSquare(24)}
+                    {this.renderSquare(4, 0)}
+                    {this.renderSquare(4, 1)}
+                    {this.renderSquare(4, 2)}
+                    {this.renderSquare(4, 3)}
+                    {this.renderSquare(4, 4)}
                 </div>
             </div>
         );
