@@ -5,11 +5,89 @@ import './index.css';
 //五子棋
 //区域
 function H(initarr) {
-    let arr = initarr.map(itme => item.x == 0)
-    let sortedarr = arr.map(item => item.y).sort((a, b) => a - b)
-    let sum = sortedarr.length % 2 == 0 ? (sortedarr[sortedarr.length / 2] + sortedarr[sortedarr.length / 2 - 1]) * 5 / 2 : sortedarr[(sortedarr.length - 1) / 2] * 5
-    if (sortedarr.reduce((a, b) => a + b) === sum) {
-        return initarr[0].Xnext ? 'X' : 'O'
+    if (initarr.length < 9) {
+        return false;
+    }
+    let lastPoint = initarr[initarr.length - 1]
+    //横向
+    let count = 1
+    let currx = lastPoint.x;
+    let curry = lastPoint.y;
+    for (; curry > 0; curry--) {
+        if (initarr.some(item => item.x == currx && item.y == (curry - 1))) {
+            count++;
+        } else {
+            break;
+        }
+    }
+    currx = lastPoint.x;
+    curry = lastPoint.y;
+    for (; curry < 4; curry++) {
+        if (initarr.some(item => item.x == currx && item.y == (curry + 1))) {
+            count++;
+        } else {
+            break;
+        }
+    }
+    if (count == 5) {
+        console.log(`${lastPoint.Xnext ? 'X' : 'O'}`);
+        return lastPoint.Xnext ? 'X' : 'O';
+    }
+    count = 1;
+    currx = lastPoint.x;
+    curry = lastPoint.y;
+    for (; currx > 0; currx--) {
+        if (initarr.some(item => item.y == curry && item.x == (currx - 1))) {
+            count++;
+        } else {
+            break;
+        }
+    }
+    currx = lastPoint.x;
+    curry = lastPoint.y;
+    for (; currx < 4; currx++) {
+        if (initarr.some(item => item.y == curry && item.x == (currx + 1))) {
+            count++
+        } else {
+            break;
+        }
+    }
+    if (count == 5) {
+        console.log(`${lastPoint.Xnext ? 'X' : 'O'}`);
+        return lastPoint.Xnext ? 'X' : 'O';
+    }
+    count = 1;
+    currx = lastPoint.x;
+    curry = lastPoint.y;
+    for (; currx > 0; currx--) {
+        if (curry > 0) {
+            if (initarr.some(item => item.x = (currx - 1) && item.y == (curry - 1))) {
+                count++
+            } else {
+                curry--
+                continue;
+            }
+        } else {
+            break;
+        }
+    }
+    currx = lastPoint.x;
+    curry = lastPoint.y;
+    for (; currx < 4; currx++) {
+        if (curry < 4) {
+            if (initarr.some(unit => unit.x == (currx + 1) && unit.y == (curry + 1))) {
+                count++
+            } else {
+                curry++
+                continue
+            }
+        } else {
+            break;
+        }
+    }
+    if (count == 5) {
+        console.log(`${lastPoint.Xnext ? 'X' : 'O'}`);
+        return lastPoint.Xnext ? 'X' : 'O';
     }
 }
 class Board extends React.Component {
@@ -41,27 +119,27 @@ class Board extends React.Component {
     renderSquare(x, y) {
         return <Square value={this.state.squares[x][y]} cb={() => this.handleClick(x, y)} />;
     }
-    calculWinner(area) {
-        if (area.length < 9) {
-            return false;
-        }
-        let xarr = area.filter(item => item.Xnext)
-        let oarr = area.filter(item => !item.Xnext)
-        //横向
-        if (xarr.map(item => item.x == 0).length >= 5) {
-            let sortedarr = xarr.map(item => item.y).sort((a, b) => a - b)
-            let sum = sortedarr.length % 2 == 0 ? (sortedarr[sortedarr.length / 2] + sortedarr[sortedarr.length / 2 - 1]) * 5 / 2 : sortedarr[(sortedarr.length - 1) / 2] * 5
-            if (sortedarr.reduce((a, b) => a + b) === sum) {
-                return 'X'
-            }
-        }
-        console.log(xarr, oarr);
-        //纵向
-        //斜向 从上往下看为 左至右
-        //反斜向 从上往下看为 右至左
-    }
+    // calculWinner(area) {
+    //     if (area.length < 9) {
+    //         return false;
+    //     }
+    //     let xarr = area.filter(item => item.Xnext)
+    //     let oarr = area.filter(item => !item.Xnext)
+    //     //横向
+    //     if (xarr.map(item => item.x == 0).length >= 5) {
+    //         let sortedarr = xarr.map(item => item.y).sort((a, b) => a - b)
+    //         let sum = sortedarr.length % 2 == 0 ? (sortedarr[sortedarr.length / 2] + sortedarr[sortedarr.length / 2 - 1]) * 5 / 2 : sortedarr[(sortedarr.length - 1) / 2] * 5
+    //         if (sortedarr.reduce((a, b) => a + b) === sum) {
+    //             return 'X'
+    //         }
+    //     }
+    //     console.log(xarr, oarr);
+    //     //纵向
+    //     //斜向 从上往下看为 左至右
+    //     //反斜向 从上往下看为 右至左
+    // }
     render() {
-        const winner = this.calculWinner(this.state.filledArea)
+        const winner = H(this.state.filledArea)
         const status = winner ? `winner is ${winner}` : `Next player: ${this.state.Xnext ? 'x' : 'o'}`;
         return (
             <div>
