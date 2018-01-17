@@ -4,14 +4,19 @@ const cleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 module.exports = {
 	entry: {
-		
-		index:'./src/index.js'
+
+		index: './src/index.js'
 		// index: ['react-hot-loader/patch','webpack-dev-server/client?http://localhost:8080','webpack/hot/only-dev-server','./src/index.js']
 	},
-
-	devtool: 'eval',
+	output: {
+		path: path.resolve(__dirname, 'src'),
+		filename: "[name].bundle.js",
+		// publicPath:'/'
+	},
+	devtool: 'eval-source-map',
 	devServer: {
-		contentBase: path.join(__dirname,'dist'),
+		// contentBase: path.join(__dirname,'qwer'),
+		contentBase: false,
 		hot: true,
 		// publicPath:'/'
 	},
@@ -27,11 +32,7 @@ module.exports = {
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NamedModulesPlugin()
 	],
-	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: "[name].bundle.js",
-		// publicPath:'/'
-	},
+
 	module: {
 		loaders: [
 			{
