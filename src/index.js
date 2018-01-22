@@ -5,7 +5,7 @@ import './index.css';
 //五子棋
 //区域
 function H(initarr) {
-    if (initarr.length < 9) {
+    if (initarr.length < 5) {
         return false;
     }
     let lastPoint = initarr[initarr.length - 1]
@@ -22,17 +22,17 @@ function H(initarr) {
     }
     currx = lastPoint.x;
     curry = lastPoint.y;
-    for (; curry < 4; curry++) {
+    for (; curry < 19; curry++) {
         if (initarr.some(item => item.x == currx && item.y == (curry + 1))) {
             count++;
         } else {
             break;
         }
     }
-    if (count == 5) {
-        console.log(`${lastPoint.Xnext ? 'X' : 'O'}`);
-        return lastPoint.Xnext ? 'X' : 'O';
+    if (count > 4) {
+        return lastPoint.Xnext ? 'O' : 'X';
     }
+    //纵向
     count = 1;
     currx = lastPoint.x;
     curry = lastPoint.y;
@@ -45,26 +45,27 @@ function H(initarr) {
     }
     currx = lastPoint.x;
     curry = lastPoint.y;
-    for (; currx < 4; currx++) {
+    for (; currx < 19; currx++) {
         if (initarr.some(item => item.y == curry && item.x == (currx + 1))) {
             count++
         } else {
             break;
         }
     }
-    if (count == 5) {
-        console.log(`${lastPoint.Xnext ? 'X' : 'O'}`);
-        return lastPoint.Xnext ? 'X' : 'O';
+    if (count > 4) {
+
+        return lastPoint.Xnext ? 'O' : 'X';
     }
+    //左到右 上到下
     count = 1;
     currx = lastPoint.x;
     curry = lastPoint.y;
     for (; currx > 0; currx--) {
         if (curry > 0) {
-            if (initarr.some(item => item.x = (currx - 1) && item.y == (curry - 1))) {
+            if (initarr.some(item => item.x == (currx - 1) && item.y == (curry - 1))) {
                 count++
-            } else {
                 curry--
+            } else {
                 continue;
             }
         } else {
@@ -73,29 +74,58 @@ function H(initarr) {
     }
     currx = lastPoint.x;
     curry = lastPoint.y;
-    for (; currx < 4; currx++) {
-        if (curry < 4) {
+    for (; currx < 19; currx++) {
+        if (curry < 19) {
             if (initarr.some(unit => unit.x == (currx + 1) && unit.y == (curry + 1))) {
                 count++
-            } else {
                 curry++
+            } else {
                 continue
             }
         } else {
             break;
         }
     }
-    if (count == 5) {
-        console.log(`${lastPoint.Xnext ? 'X' : 'O'}`);
-        return lastPoint.Xnext ? 'X' : 'O';
+    if (count > 4) {
+
+        return lastPoint.Xnext ? 'O' : 'X';
     }
+    //左到右 下到上
+    count = 1;
+    currx = lastPoint.x;
+    curry = lastPoint.y;
+    for (; currx > 0; currx--) {
+        if (curry < 19) {
+            if (initarr.some(item => item.x == (currx - 1) && item.y == (curry + 1))) {
+                count++
+                curry++
+            } else {
+                continue
+            }
+        }
+    }
+    currx = lastPoint.x;
+    curry = lastPoint.y;
+    for (; currx < 19; currx++) {
+        if (curry > 0) {
+            if (initarr.some(item => item.x == (currx + 1) && item.y == (curry - 1))) {
+                count++
+                curry--
+            }
+        }
+    }
+    if (count > 4) {
+
+        return lastPoint.Xnext ? 'O' : 'X';
+    }
+    return false
 }
 class Board extends React.Component {
     constructor() {
         super();
-        const arr = Array(5)
+        const arr = Array(20)
         for (var i = 0; i < arr.length; i++) {
-            arr[i] = Array(5)
+            arr[i] = Array(20)
         }
         // 用Array(5).fill(Array(5))构造出来的二维数组有问题，每一项会保留同一引用
         this.state = {
@@ -103,6 +133,8 @@ class Board extends React.Component {
             Xnext: true,
             filledArea: []
         }
+        this.verticalData = Array(20).fill('').map((item, idx) => idx)
+        this.horizentalData = Array(20).fill('').map((item, idx) => idx)
     }
     handleClick(x, y) {
         if (this.state.squares[x][y]) {
@@ -113,11 +145,11 @@ class Board extends React.Component {
         this.setState({
             squares: squares,
             Xnext: !this.state.Xnext,
-            filledArea: this.state.filledArea.concat([{ x, y, Xnext: this.state.Xnext }])
+            filledArea: this.state.filledArea.concat([{ x, y, Xnext: !this.state.Xnext }])
         })
     }
     renderSquare(x, y) {
-        return <Square value={this.state.squares[x][y]} cb={() => this.handleClick(x, y)} />;
+        return <Square key={100 * x + y} value={this.state.squares[x][y]} cb={() => this.handleClick(x, y)} />;
     }
     // calculWinner(area) {
     //     if (area.length < 9) {
@@ -139,46 +171,19 @@ class Board extends React.Component {
     //     //反斜向 从上往下看为 右至左
     // }
     render() {
-        const winner = H(this.state.filledArea)
-        const status = winner ? `winner is ${winner}` : `Next player: ${this.state.Xnext ? 'x' : 'o'}`;
+        const Xarr = this.state.filledArea.filter(item => !item.Xnext)
+        const Oarr = this.state.filledArea.filter(item => item.Xnext)
+        const winner = H(Xarr) || H(Oarr)
+        const status = winner ? `winner is ${winner}` : `Next player: ${this.state.Xnext ? 'X' : 'O'}`;
+        this.initCell = (i) => {
+            return <div className="board-row" key={i.toString()}>
+                {this.verticalData.map((item, idx) => this.renderSquare(i, item))}
+            </div>
+        }
         return (
             <div>
                 <div className="status">{status}</div>
-                <div className="board-row">
-                    {this.renderSquare(0, 0)}
-                    {this.renderSquare(0, 1)}
-                    {this.renderSquare(0, 2)}
-                    {this.renderSquare(0, 3)}
-                    {this.renderSquare(0, 4)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(1, 0)}
-                    {this.renderSquare(1, 1)}
-                    {this.renderSquare(1, 2)}
-                    {this.renderSquare(1, 3)}
-                    {this.renderSquare(1, 4)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(2, 0)}
-                    {this.renderSquare(2, 1)}
-                    {this.renderSquare(2, 2)}
-                    {this.renderSquare(2, 3)}
-                    {this.renderSquare(2, 4)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3, 0)}
-                    {this.renderSquare(3, 1)}
-                    {this.renderSquare(3, 2)}
-                    {this.renderSquare(3, 3)}
-                    {this.renderSquare(3, 4)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(4, 0)}
-                    {this.renderSquare(4, 1)}
-                    {this.renderSquare(4, 2)}
-                    {this.renderSquare(4, 3)}
-                    {this.renderSquare(4, 4)}
-                </div>
+                {this.horizentalData.map((i) => this.initCell(i))}
             </div>
         );
     }
