@@ -4,6 +4,7 @@ import Square from './square'
 import './index.css';
 //五子棋
 //区域
+//计算是否五子连线
 function H(initarr) {
     if (initarr.length < 5) {
         return false;
@@ -151,25 +152,6 @@ class Board extends React.Component {
     renderSquare(x, y) {
         return <Square key={100 * x + y} value={this.state.squares[x][y]} cb={() => this.handleClick(x, y)} />;
     }
-    // calculWinner(area) {
-    //     if (area.length < 9) {
-    //         return false;
-    //     }
-    //     let xarr = area.filter(item => item.Xnext)
-    //     let oarr = area.filter(item => !item.Xnext)
-    //     //横向
-    //     if (xarr.map(item => item.x == 0).length >= 5) {
-    //         let sortedarr = xarr.map(item => item.y).sort((a, b) => a - b)
-    //         let sum = sortedarr.length % 2 == 0 ? (sortedarr[sortedarr.length / 2] + sortedarr[sortedarr.length / 2 - 1]) * 5 / 2 : sortedarr[(sortedarr.length - 1) / 2] * 5
-    //         if (sortedarr.reduce((a, b) => a + b) === sum) {
-    //             return 'X'
-    //         }
-    //     }
-    //     console.log(xarr, oarr);
-    //     //纵向
-    //     //斜向 从上往下看为 左至右
-    //     //反斜向 从上往下看为 右至左
-    // }
     render() {
         const Xarr = this.state.filledArea.filter(item => !item.Xnext)
         const Oarr = this.state.filledArea.filter(item => item.Xnext)
