@@ -64,16 +64,16 @@ class App extends React.Component {
         var stageWidth = stageDom.scrollWidth;
         var stageHeight = stageDom.scrollHeight;
 
-        var halfStageWidth = Math.ceil(stageWidth / 2);
-        var halfStageHeight = Math.ceil(stageHeight / 2);
+        var halfStageWidth = Math.floor(stageWidth / 2);
+        var halfStageHeight = Math.floor(stageHeight / 2);
 
         //获取imageFigure的大小
         var imageFigureDom = ReactDOM.findDOMNode(this.refs.imageFigure0);
         var imageWidth = imageFigureDom.scrollWidth;
         var imageHeight = imageFigureDom.scrollHeight;
 
-        var halfImageWidth = Math.ceil(imageWidth / 2);
-        var halfImageHeight = Math.ceil(imageHeight / 2);
+        var halfImageWidth = Math.floor(imageWidth / 2);
+        var halfImageHeight = Math.floor(imageHeight / 2);
 
         //计算中心图片的位置
         this.Constant.centerPos = {
