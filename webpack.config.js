@@ -41,7 +41,7 @@ module.exports = {
 				loader: 'babel-loader',
 				query: {
 					presets: ['react', 'es2015'],
-					// plugins:['react-hot-loader/babel']
+					plugins: ['transform-class-properties']
 				}
 			},
 			{
@@ -51,6 +51,9 @@ module.exports = {
 			{
 				test: /\.css$/,
 				loader: 'style-loader!css-loader'
+			}, {
+				test: /\.(jpg|png)/,
+				loader: 'file-loader'
 			}
 		],
 

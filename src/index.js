@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Square from './square'
 import './index.css';
+import App from './app'
+import srcimageDatas from './imageData'
 //五子棋
 //区域
 //计算是否五子连线
@@ -188,9 +190,16 @@ class Game extends React.Component {
 }
 
 // ========================================
-
+//画廊
+//获取图片相关数据
+var imageDatas = ((imageDataArray) => {
+    for (var i = 0; i < imageDataArray.length; i++) {
+        imageDataArray[i].imageUrl = require("./images/" + imageDataArray[i].fileName);
+    }
+    return imageDataArray
+})(srcimageDatas)
 ReactDOM.render(
-    <Game />,
+    <App imageDataArray={imageDatas} />,
     document.getElementById('root')
 );
 if (module.hot)

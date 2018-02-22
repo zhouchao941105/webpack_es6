@@ -1,7 +1,7 @@
 import React from 'react'
 class imgFigure extends React.Component {
 
-    handleClick(event) {
+    handleClick = (event) => {
         if (this.props.arrange.isCenter) {
             this.props.inverse()
         } else {
