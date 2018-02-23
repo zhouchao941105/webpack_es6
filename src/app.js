@@ -10,7 +10,7 @@ function getRangeRandom(low, high) {
 }
 //获取正负30之间的随机数
 function get30DegRandom() {
-    return Math.random() > 0.5 ? '' : '-' + Math.floor(Math.random() * 30)
+    return (Math.random() > 0.5 ? '' : '-') + Math.floor(Math.random() * 30)
 }
 
 class App extends React.Component {
@@ -82,10 +82,10 @@ class App extends React.Component {
         }
 
         //计算左右两侧 图片排布位置的取值范围
-        this.Constant.hPosRange.leftSecX[0] = -halfImageWidth;
+        this.Constant.hPosRange.leftSecX[0] = 0;
         this.Constant.hPosRange.leftSecX[1] = halfStageWidth - halfImageWidth - imageWidth;
         this.Constant.hPosRange.rightSecX[0] = halfStageWidth + halfImageWidth;
-        this.Constant.hPosRange.rightSecX[1] = stageWidth - halfImageWidth;
+        this.Constant.hPosRange.rightSecX[1] = stageWidth - imageWidth;
 
         this.Constant.hPosRange.y[0] = -halfImageHeight;
         this.Constant.hPosRange.y[1] = halfStageHeight - halfImageHeight;
@@ -129,8 +129,10 @@ class App extends React.Component {
             vPosRangeX = vPosRange.x,
 
             imgsArrangeTopArr = [],
+            //顶部图片的数量，0或1
             topImgNum = Math.floor(Math.random() * 2),
             topImgSpliceIndex = 0,
+            //取出居中的图片
             imgsArrangeCenterArr = imgsArrangeArr.splice(centerIndex, 1);
 
         imgsArrangeCenterArr[0].pos = centerPos;
@@ -138,7 +140,7 @@ class App extends React.Component {
         //居中的图片不需要翻转
         imgsArrangeCenterArr[0].rotate = 0;
 
-        //去除要布局上侧的图片的状态信息
+        //取出要布局上侧的图片的状态信息，1张或没有
         topImgSpliceIndex = Math.floor(Math.random() * (imgsArrangeArr.length - topImgNum));
         imgsArrangeTopArr = imgsArrangeArr.splice(topImgSpliceIndex, topImgNum)
 
@@ -159,9 +161,9 @@ class App extends React.Component {
             let hPosRangeLORX = null;
             //前半部分布局左边，后半部分布局右边
             if (i < k) {
-                hPosRangeLORX = hPosRangeRightSecX;
+                hPosRangeLORX = hPosRangeLeftSecX;
             } else {
-                hPosRangeLORX = hPosRangeLeftSecX
+                hPosRangeLORX = hPosRangeRightSecX;
             }
             imgsArrangeArr[i] = {
                 pos: {
@@ -172,10 +174,11 @@ class App extends React.Component {
                 isCenter: false
             }
         }
-
+        //如果之前上侧图片有1张，需要给补上
         if (imgsArrangeTopArr && imgsArrangeTopArr[0]) {
             imgsArrangeArr.splice(topImgSpliceIndex, 0, imgsArrangeTopArr[0])
         }
+        //把中心的图片也补上，保持imageArrangeArray的完整
         imgsArrangeArr.splice(centerIndex, 0, imgsArrangeCenterArr[0]);
         this.setState({
             imageArrangeArray: imgsArrangeArr
@@ -187,15 +190,15 @@ class App extends React.Component {
             imageFigures = [];
         var dataArray = this.props.imageDataArray;
         dataArray.forEach((value, index) => {
-            controllerUnits.push(<ControllerUnit key={index}
-                arrange={this.state.imageArrangeArray[index]}
-                center={this.center(index)}
-                inverse={this.inverse(index)} />)
             imageFigures.push(<ImageFigure arrange={this.state.imageArrangeArray[index]}
                 key={index} data={value}
                 center={this.center(index)}
                 inverse={this.inverse(index)}
                 ref={`imageFigure${index}`} />);
+            controllerUnits.push(<ControllerUnit key={index}
+                arrange={this.state.imageArrangeArray[index]}
+                center={this.center(index)}
+                inverse={this.inverse(index)} />);
         })
         return (
             <section className="stage" ref="stage">

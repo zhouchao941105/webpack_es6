@@ -12,7 +12,10 @@ class imgFigure extends React.Component {
     }
     render() {
         //是否有传入类名
-        let styleObj = this.props.arrange.pos || {}
+        let styleObj = this.props.arrange.pos || {};
+        if (this.props.arrange.rotate) {
+            !styleObj['WebkitTransform'] && (styleObj['WebkitTransform'] = `rotate(${this.props.arrange.rotate}deg)`)
+        }
         let imgClassName = `img-figure ${this.props.arrange.isInverse ? 'is-inverse' : ''}`
         return (
             <figure className={imgClassName} onClick={this.handleClick} style={styleObj}>
