@@ -1,4 +1,7 @@
+
 {
+  "name":"webpack",
+  "version": "1.0",
 	"scripts": {
 		"build": "webpack --config webpack.config.js --env prod",
 		"start": "webpack-dev-server --open",
