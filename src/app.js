@@ -10,7 +10,7 @@ function getRangeRandom(low, high) {
 }
 //获取正负30之间的随机数
 function get30DegRandom() {
-    return (Math.random() > 0.5 ? '' : '-') + Math.floor(Math.random() * 30)
+    return (Math.random() > 0.5 ? '' : '-') + Math.floor(Math.random() * 45)
 }
 
 class App extends React.Component {
