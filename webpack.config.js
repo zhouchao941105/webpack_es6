@@ -25,8 +25,8 @@ module.exports = {
 		new HtmlWebpackPlugin(
 			{
 				template: './src/index.html',
-				title: "react",
-				inject: true
+				title: "Awesome React",
+				inject: true,
 			}
 		),
 		new webpack.HotModuleReplacementPlugin(),
@@ -44,10 +44,10 @@ module.exports = {
 					plugins: ['transform-class-properties']
 				}
 			},
-			{
-				test: /\.html/,
-				loader: 'raw-loader'
-			},
+			// {
+			// 	test: /\.html/,
+			// 	loader: 'html-loader'
+			// },
 			{
 				test: /\.css$/,
 				loader: 'style-loader!css-loader'
